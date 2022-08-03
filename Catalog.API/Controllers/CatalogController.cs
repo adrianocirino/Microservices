@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalog.API.Entities;
 using Catalog.API.Repositories;
-using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 
 namespace Catalog.API.Controllers
 {
@@ -32,7 +30,7 @@ namespace Catalog.API.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id:length(24)", Name = "GetProduct")]
+        [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType(typeof(Product), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Product), StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Product>> GetProductById(string id)
@@ -77,7 +75,7 @@ namespace Catalog.API.Controllers
         {
             if (product is null) return BadRequest();
 
-            return Ok(_productRepository.UpdateProduct(product));
+            return Ok(await _productRepository.UpdateProduct(product));
         }
 
         [HttpDelete]
