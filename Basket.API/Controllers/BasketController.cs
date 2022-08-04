@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Basket.API.Entities;
 using Basket.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 
 namespace Basket.API.Controllers
 {
