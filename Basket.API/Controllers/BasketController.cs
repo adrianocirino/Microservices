@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Basket.API.Entities;
 using Basket.API.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 
 namespace Basket.API.Controllers
 {
@@ -34,6 +35,9 @@ namespace Basket.API.Controllers
         [HttpDelete("{username}", Name = "DeleteBasket")]
         public async Task<ActionResult> DeleteBasket(string userName)
         {
+            var basket = await _repository.Getbasket(userName);
+            if (basket is null) return NotFound();
+            
             await _repository.DeleteBasket(userName);
             return Ok();
         }
