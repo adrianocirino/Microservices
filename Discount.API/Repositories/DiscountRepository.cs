@@ -31,7 +31,7 @@ namespace Discount.API.Repositories
         {
 
             var query = $"INSERT INTO COUPON (PRODUCTNAME, DESCRIPTION, AMOUNT) VALUES " +
-                        $"(@ProductName, @Description, @Amount";
+                        $"(@ProductName, @Description, @Amount)";
 
             var param = new { coupon.ProductName, coupon.Description, coupon.Amount };
 
@@ -41,7 +41,7 @@ namespace Discount.API.Repositories
         public async Task<bool> UpdateDiscount(Coupon coupon)
         {
             var query =
-                $"UPDATE COUPON SET PRODUCTNAME = @ProductName, DESCRIPTION = @Description, AMOUNT = @Amount WHERE ID = @Id) ";
+                $"UPDATE COUPON SET PRODUCTNAME = @ProductName, DESCRIPTION = @Description, AMOUNT = @Amount WHERE ID = @Id";
 
             var param = new { coupon.ProductName, coupon.Description, coupon.Amount, coupon.Id };
 
@@ -51,7 +51,7 @@ namespace Discount.API.Repositories
         public async Task<bool> DeleteDiscount(string productName)
         {
             var query =
-                $"DELETE FROM COUPON WHERE PRODUCTNAME = @ProductName) ";
+                $"DELETE FROM COUPON WHERE PRODUCTNAME = @ProductName ";
 
             return await ExecuteQuery(query, new { productName } );
         }
