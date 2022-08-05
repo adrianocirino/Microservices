@@ -9,16 +9,18 @@ namespace Discount.API.Repositories
 {
     public class DiscountRepository : IDiscountRepository
     {
-        private readonly NpgsqlConnection _connectionString;
+        private readonly IConfiguration _configuration;
 
         public DiscountRepository(IConfiguration configuration)
         {
-            _connectionString = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
+            _configuration = configuration;
         }
         public async Task<Coupon> GetDiscount(string productName)
         {
-            var query= "SELECT * FROM Coupon WHERE ProductName = @ProductName";
-            var coupon = await _connectionString.QueryFirstOrDefaultAsync<Coupon>(query, new { ProductName = productName });
+            var connection = GetConnection();
+
+            var query= "SELECT * FROM Coupon WHERE lower(ProductName) = @ProductName ";
+            var coupon = await connection.QueryFirstOrDefaultAsync<Coupon>(query, new { ProductName = productName.ToLower() });
 
             if (coupon is null) return new Coupon{ProductName = "No Discount", Amount = 0, Description = "No Discount Desc"};
             
@@ -56,9 +58,15 @@ namespace Discount.API.Repositories
 
         private async Task<bool> ExecuteQuery(string query, object param)
         {
-            var affected = await _connectionString.ExecuteAsync(query, param);
+            var connection = GetConnection();
+            var affected = await connection.ExecuteAsync(query, param);
 
             return affected != 0 ;
+        }
+
+        private NpgsqlConnection GetConnection()
+        {
+            return new NpgsqlConnection(_configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
         }
     }
 }
